@@ -1,0 +1,37 @@
+body{
+    font-family: 'Arvo', serif;
+    margin: 0%;
+}
+nav{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding:5px 5px 5px 5px;
+    background: skyblue;
+}
+
+main{
+    padding-left: 50px;
+}
+
+.surveyButton{
+    display: inline-block;
+    width: 10%;
+    
+}
+
+.surveyButton:link, .surveyButton:visited {
+    background-color: skyblue;
+    color: black;
+    border: 2px ridge skyblue;
+    border-radius: 10px;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    
+  }
+  
+  .surveyButton:hover, .surveyButton:active {
+    background-color: rgb(86, 230, 186);
+  }

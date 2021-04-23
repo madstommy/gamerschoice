@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="stylesheet" href="../css/surveyStyles.css" />
+      <script src="https://apis.google.com/js/platform.js" async defer></script>
+      <meta name="google-signin-client_id" content="666213291305-4av94d6g41bfllkr7ggdhoju08b3tkhp.apps.googleusercontent.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" />
+      <link href="https://fonts.googleapis.com/css2?family=Arvo&display=swap" rel="stylesheet" />
+      <title>Choose Your Game</title>
+   </head>
+   <body>
+      <nav class="navbar">
+         <a><img src="/logo.png" class="logo" width="50" height="50" /></a>
+      </nav>
+      <form action="/users/survey" id="quiz" method="POST">
+         <ol>
+            <li>
+               <h3>The Elder Scrolls V: Skyrim</h3>
+               <div>
+                  <input type="radio" name="q1answers" id="question-1-answers-A" value="A" />
+                  <label for="question-1-answers-A">A) Enjoy</label>
+               </div>
+               <div>
+                  <input type="radio" name="q1answers" id="question-1-answers-B" value="B" />
+                  <label for="question-1-answers-B">B) Dislike</label>
+               </div>
+               <div>
+                  <input type="radio" name="q1answers" id="question-1-answers-C" value="C" />
+                  <label for="question-1-answers-C">C) Indifferent/Have Not Played</label>
+               </div>
+            </li>
+            <li>
+               <h3>DOOM</h3>
+               <div>
+                  <input type="radio" name="q2answers" id="question-2-answers-A" value="A" />
+                  <label for="question-2-answers-A">A) Enjoy</label>
+               </div>
+               <div>
+                  <input type="radio" name="q2answers" id="question-2-answers-B" value="B" />
+                  <label for="question-2-answers-B">B) Dislike</label>
+               </div>
+               <div>
+                  <input type="radio" name="q2answers" id="question-2-answers-C" value="C" />
+                  <label for="question-2-answers-C">C) Indifferent/Have Not Played</label>
+               </div>
+            </li>
+            <li>
+               <h3>Battlefield V</h3>
+               <div>
+                  <input type="radio" name="q3answers" id="question-3-answers-A" value="A" />
+                  <label for="question-3-answers-A">A) Enjoy</label>
+               </div>
+               <div>
+                  <input type="radio" name="q3answers" id="question-3-answers-B" value="B" />
+                  <label for="question-3-answers-B">B) Dislike</label>
+               </div>
+               <div>
+                  <input type="radio" name="q3answers" id="question-3-answers-C" value="C" />
+                  <label for="question-3-answers-C">C) Indifferent/Have Not Played</label>
+               </div>
+            </li>
+            <li>
+               <h3>GTA V</h3>
+               <div>
+                  <input type="radio" name="q4answers" id="question-4-answers-A" value="A" />
+                  <label for="question-4-answers-A">A) Enjoy</label>
+               </div>
+               <div>
+                  <input type="radio" name="q4answers" id="question-4-answers-B" value="B" />
+                  <label for="question-4-answers-B">B) Dislike</label>
+               </div>
+               <div>
+                  <input type="radio" name="q4answers" id="question-4-answers-C" value="C" />
+                  <label for="question-4-answers-C">C) Indifferent/Have Not Played</label>
+               </div>
+            </li>
+            <li>
+               <h3>FIFA 21</h3>
+               <div>
+                  <input type="radio" name="q5answers" id="question-5-answers-A" value="A" />
+                  <label for="question-5-answers-A">A) Enjoy</label>
+               </div>
+               <div>
+                  <input type="radio" name="q5answers" id="question-5-answers-B" value="B" />
+                  <label for="question-5-answers-B">B) Dislike</label>
+               </div>
+               <div>
+                  <input type="radio" name="q5answers" id="question-5-answers-C" value="C" />
+                  <label for="question-5-answers-C">C) Indifferent/Have Not Played</label>
+               </div>
+            </li>
+            <li>
+               <h3>Portal</h3>
+
+               <div>
+                  <input type="radio" name="q6answers" id="question-6-answers-A" value="A" />
+                  <label for="question-6-answers-A">A) Enjoy</label>
+               </div>
+               <div>
+                  <input type="radio" name="q6answers" id="question-6-answers-B" value="B" />
+                  <label for="question-6-answers-B">B) Dislike</label>
+               </div>
+               <div>
+                  <input type="radio" name="q6answers" id="question-6-answers-C" value="C" />
+                  <label for="question-6-answers-C">C) Indifferent/Have Not Played</label>
+               </div>
+            </li>
+            <li>
+               <h3>Street Fighter V</h3>
+               <div>
+                  <input type="radio" name="q7answers" id="question-7-answers-A" value="A" />
+                  <label for="question-7-answers-A">A) Enjoy</label>
+               </div>
+               <div>
+                  <input type="radio" name="q7answers" id="question-7-answers-B" value="B" />
+                  <label for="question-7-answers-B">B) Dislike</label>
+               </div>
+               <div>
+                  <input type="radio" name="q7answers" id="question-7-answers-C" value="C" />
+                  <label for="question-7-answers-C">C) Indifferent/Have Not Played</label>
+               </div>
+            </li>
+            <li>
+               <h3>Fable Anniversary</h3>
+               <div>
+                  <input type="radio" name="q8answers" id="question-8-answers-A" value="A" />
+                  <label for="question-8-answers-A">A) Enjoy</label>
+               </div>
+               <div>
+                  <input type="radio" name="q8answers" id="question-8-answers-B" value="B" />
+                  <label for="question-8-answers-B">B) Dislike</label>
+               </div>
+               <div>
+                  <input type="radio" name="q8answers" id="question-8-answers-C" value="C" />
+                  <label for="question-8-answers-C">C) Indifferent/Have Not Played</label>
+               </div>
+            </li>
+            <li>
+               <h3>Bloons TD 6</h3>
+               <div>
+                  <input type="radio" name="q9answers" id="question-9-answers-A" value="A" />
+                  <label for="question-4-answers-A">A) Enjoy</label>
+               </div>
+               <div>
+                  <input type="radio" name="q9answers" id="question-9-answers-B" value="B" />
+                  <label for="question-9-answers-B">B) Dislike</label>
+               </div>
+               <div>
+                  <input type="radio" name="q9answers" id="question-9-answers-C" value="C" />
+                  <label for="question-9-answers-C">C) Indifferent/Have Not Played</label>
+               </div>
+            </li>
+            <li>
+               <h3>Project CARS 2</h3>
+               <div>
+                  <input type="radio" name="q10answers" id="question-10-answers-A" value="A" />
+                  <label for="question-10-answers-A">A) Enjoy</label>
+               </div>
+               <div>
+                  <input type="radio" name="q10answers" id="question-10-answers-B" value="B" />
+                  <label for="question-10-answers-B">B) Dislike</label>
+               </div>
+               <div>
+                  <input type="radio" name="q10answers" id="question-10-answers-C" value="C" />
+                  <label for="question-10-answers-C">C) Indifferent/Have Not Played</label>
+               </div>
+            </li>
+         </ol>
+         <input type="submit" value="Submit Survey" />
+      </form>
+   </body>
+</html>
