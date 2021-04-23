@@ -7,15 +7,8 @@
       <title>Finish Survey</title>
    </head>
    <body>
-      <h1>Game's for you</h1>
-      <% websiteAnswers %>
+      <h1>Suggested Games for you</h1>
 
-      <ul>
-         <% var randoms = []; %> <% for (var i=0; i <websiteAnswers.length/2; i++) { %> <% var randNum = Math.floor(Math.random()
-         *websiteAnswers.length) %> <% if(randoms.includes(randNum)) {continue;} %> <% randoms.push(randNum); %>
-
-         <li><%= websiteAnswers[randNum] %></li>
-         <% } %>
-      </ul>
+      
    </body>
 </html>

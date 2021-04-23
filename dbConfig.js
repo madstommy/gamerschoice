@@ -18,3 +18,13 @@ module.exports = { pool };
 // <li> <%= userAnswers[i] %> </li>
 // <%   } %>
 // </ul> -->
+
+// <!-- <% websiteAnswers %> -->
+
+// <!-- <ul>
+//    <% var randoms = []; %> <% for (var i=0; i <websiteAnswers.length/2; i++) { %> <% var randNum = Math.floor(Math.random()
+//    *websiteAnswers.length) %> <% if(randoms.includes(randNum)) {continue;} %> <% randoms.push(randNum); %>
+
+//    <li><%= websiteAnswers[randNum] %></li>
+//    <% } %>
+// </ul> -->

@@ -12,13 +12,15 @@
       <title>Choose Your Game</title>
    </head>
    <body>
+      <% var games = userSuggestions; 
+      var user = username; %>
       <nav class="navbar">
          <a><img src="/logo.png" class="logo" width="50" height="50" /></a>
       </nav>
       <form action="/users/survey" id="quiz" method="POST">
          <ol>
             <li>
-               <h3>The Elder Scrolls V: Skyrim</h3>
+               <h3><%=games[0]%></h3>
                <div>
                   <input type="radio" name="q1answers" id="question-1-answers-A" value="A" />
                   <label for="question-1-answers-A">A) Enjoy</label>
@@ -33,7 +35,7 @@
                </div>
             </li>
             <li>
-               <h3>DOOM</h3>
+               <h3><%=games[1]%></h3>
                <div>
                   <input type="radio" name="q2answers" id="question-2-answers-A" value="A" />
                   <label for="question-2-answers-A">A) Enjoy</label>
@@ -48,7 +50,7 @@
                </div>
             </li>
             <li>
-               <h3>Battlefield V</h3>
+               <h3><%=games[2]%></h3>
                <div>
                   <input type="radio" name="q3answers" id="question-3-answers-A" value="A" />
                   <label for="question-3-answers-A">A) Enjoy</label>
@@ -63,7 +65,7 @@
                </div>
             </li>
             <li>
-               <h3>GTA V</h3>
+               <h3><%=games[3]%></h3>
                <div>
                   <input type="radio" name="q4answers" id="question-4-answers-A" value="A" />
                   <label for="question-4-answers-A">A) Enjoy</label>
@@ -78,7 +80,7 @@
                </div>
             </li>
             <li>
-               <h3>FIFA 21</h3>
+               <h3><%=games[4]%></h3>
                <div>
                   <input type="radio" name="q5answers" id="question-5-answers-A" value="A" />
                   <label for="question-5-answers-A">A) Enjoy</label>
@@ -93,7 +95,7 @@
                </div>
             </li>
             <li>
-               <h3>Portal</h3>
+               <h3><%=games[5]%></h3>
 
                <div>
                   <input type="radio" name="q6answers" id="question-6-answers-A" value="A" />
@@ -109,7 +111,7 @@
                </div>
             </li>
             <li>
-               <h3>Street Fighter V</h3>
+               <h3><%=games[6]%></h3>
                <div>
                   <input type="radio" name="q7answers" id="question-7-answers-A" value="A" />
                   <label for="question-7-answers-A">A) Enjoy</label>
@@ -124,7 +126,7 @@
                </div>
             </li>
             <li>
-               <h3>Fable Anniversary</h3>
+               <h3><%=games[7]%></h3>
                <div>
                   <input type="radio" name="q8answers" id="question-8-answers-A" value="A" />
                   <label for="question-8-answers-A">A) Enjoy</label>
@@ -139,7 +141,7 @@
                </div>
             </li>
             <li>
-               <h3>Bloons TD 6</h3>
+               <h3><%=games[8]%></h3>
                <div>
                   <input type="radio" name="q9answers" id="question-9-answers-A" value="A" />
                   <label for="question-4-answers-A">A) Enjoy</label>
@@ -154,7 +156,7 @@
                </div>
             </li>
             <li>
-               <h3>Project CARS 2</h3>
+               <h3><%=games[9]%></h3>
                <div>
                   <input type="radio" name="q10answers" id="question-10-answers-A" value="A" />
                   <label for="question-10-answers-A">A) Enjoy</label>
@@ -166,6 +168,20 @@
                <div>
                   <input type="radio" name="q10answers" id="question-10-answers-C" value="C" />
                   <label for="question-10-answers-C">C) Indifferent/Have Not Played</label>
+               </div>
+            </li>
+            <li hidden>
+               <h3></h3>
+               <div>
+                  <input type="radio" name="userGameTitles" id="question-11-answers-A" value="<%=games%>" checked hidden />
+                  <label for="question-11-answers-A"></label>
+               </div>
+            </li>
+            <li hidden>
+               <h3></h3>
+               <div>
+                  <input type="radio" name="usernameInput" id="question-12-answers-A" value="<%=user%>" checked hidden />
+                  <label for="question-12-answers-A"></label>
                </div>
             </li>
          </ol>

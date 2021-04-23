@@ -4,20 +4,33 @@
       <meta charset="UTF-8" />
       <meta http-equiv="X-UA-Compatible" content="IE=edge" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <link rel="stylesheet" href="profileStyles.css" />
+     
       <script src="https://apis.google.com/js/platform.js" async defer></script>
       <meta name="google-signin-client_id" content="666213291305-4av94d6g41bfllkr7ggdhoju08b3tkhp.apps.googleusercontent.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" />
       <link href="https://fonts.googleapis.com/css2?family=Arvo&display=swap" rel="stylesheet" />
+      <link rel="stylesheet" href="/css/dashboard.css" />
       <title>DashBoard</title>
    </head>
    <body>
       <nav class="navbar">
-         <a href="index"><img src="/logo.png" class="logo" width="50" height="50" /></a>
+         <img src="/logo.png" class="logo" width="50" height="50" /></a>
       </nav>
       <main>
-         <a href=""></a>
-         <h1>Welcome</h1>
+         <h1>Welcome <%=user %></h1>
+         <form action="/users/survey" method="GET">
+            <button type="submit" value="<%=user%>" name="getUser">Survey</button>
+         </form>
+         
       </main>
+      <h3>Recommended Games</h3>
+      <div class="wrapper">
+         <div class="box a">A</div>
+         <div class="box b">B</div>
+         <div class="box c">C</div>
+         <div class="box d">D</div>
+         <div class="box e">E</div>
+         <div class="box f">F</div>
+       </div>
    </body>
 </html>

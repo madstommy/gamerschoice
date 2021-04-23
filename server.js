@@ -4,15 +4,15 @@ const bcrypt = require("bcrypt");
 const passport = require("passport");
 const flash = require("express-flash");
 const session = require("express-session");
+// const bodyParser = require("body-parser");
 require("dotenv").config();
 const app = express();
 
 const initializePassport = require("./passportConfig");
+const { render } = require("ejs");
 
 initializePassport(passport);
-
-// const multer = require("multer");
-// const upload = multer();
+// app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.urlencoded({ extended: false }));
 app.set("view engine", "ejs");
 app.use(
@@ -28,7 +28,6 @@ app.use(passport.session());
 app.use(flash());
 
 app.use(express.static(__dirname + "/public/images"));
-// app.use(upload.array());
 app.use(express.static("public"));
 
 app.get("/", function (req, res) {
@@ -40,24 +39,63 @@ app.get("/users/register", checkAuthenticated, (req, res) => {
 });
 
 app.get("/users/login", checkAuthenticated, (req, res) => {
-   // flash sets a messages variable. passport sets the error message
    console.log(req.session.flash.error);
    res.render("login.ejs");
 });
 
-app.post("/users/login", passport.authenticate("local", { successRedirect: "/users/survey", failureRedirect: "/users/login", failureFlash: true }));
+app.post(
+   "/users/login",
+   passport.authenticate("local", { successRedirect: "/users/dashboard", failureRedirect: "/users/login", failureFlash: true })
+);
 
 app.get("/users/dashboard", checkNotAuthenticated, (req, res) => {
    console.log(req.isAuthenticated());
    res.render("dashboard", { user: req.user.username });
 });
 
-app.get("/users/survey", function (req, res) {
-   res.render("survey");
+app.get("/users/survey", async function (req, res) {
+   var gameIds = [];
+   var userRandomGames = [];
+   var user = req.body.getUser;
+
+   try {
+      const res = await pool.query("SELECT * FROM games");
+      const data = res.rows;
+      data.forEach((row) => {
+         gameIds.push(parseInt(row.game_id));
+      });
+      console.log(gameIds);
+   } catch (err) {
+      console.log(err.stack);
+   }
+
+   for (var i = gameIds.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var temp = gameIds[i];
+      gameIds[i] = gameIds[j];
+      gameIds[j] = temp;
+   }
+
+   for (let i = 0; i < 10; i++) {
+      try {
+         const res = await pool.query("SELECT * FROM games WHERE game_id = $1", [gameIds[i]]);
+         const data = res.rows;
+         data.forEach((row) => {
+            userRandomGames.push(row.title);
+         });
+      } catch (err) {
+         console.log(err.stack);
+      }
+   }
+   console.log(userRandomGames);
+
+   res.render("survey", { userSuggestions: userRandomGames, username: user });
 });
 
 app.post("/users/survey", async function (req, res) {
    var answers = [];
+   var filterGames = [];
+   var filterAnswers = [];
    const q1a = req.body.q1answers;
    const q2a = req.body.q2answers;
    const q3a = req.body.q3answers;
@@ -68,9 +106,12 @@ app.post("/users/survey", async function (req, res) {
    const q8a = req.body.q8answers;
    const q9a = req.body.q9answers;
    const q10a = req.body.q10answers;
+   const gameTitles = req.body.userGameTitles;
+   const user = req.body.usernameInput;
+   console.log(gameTitles);
    let errors = [];
 
-   if (!q1a || !q2a || !q3a || !q4a || !q5a) {
+   if (!q1a || !q2a || !q3a || !q4a || !q5a || !q6a || !q7a || !q8a || !q9a || !q10a) {
       errors.push({ message: "Please answer all questions" });
       res.render("survey", { errors, q1a, q2a, q3a, q4a, q5a, q6a, q7a, q8a, q9a, q10a });
    }
@@ -78,31 +119,32 @@ app.post("/users/survey", async function (req, res) {
    if (errors.length > 0) {
       res.render("survey", { errors, q1a, q2a, q3a, q4a, q5a, q6a, q7a, q8a, q9a, q10a });
    } else {
-      console.log("success survey");
-      console.log({ q1a, q2a, q3a, q4a, q5a });
       answers.push(q1a, q2a, q3a, q4a, q5a, q6a, q7a, q8a, q9a, q10a);
-      console.log(answers);
 
-      var games = [
-         "They Are Billions",
-         "Halo Wars: Definitive Edition",
-         "Grand Theft Auto IV",
-         "Yakuza 0",
-         "Life Is Strange 2",
-         "Star Wars: Battlefront 2",
-         "The Jackbox Party Pack 2",
-         "The Witcher 3",
-         "Middle Earth Shadow of War",
-         "Spore",
-         "JUMP FORCE",
-         "DRAGON BALL FighterZ",
-         "Frostpunk",
-         "ShellShock Live",
-         "DiRT Rally 2.0",
-      ];
+      var restt = gameTitles.split(",");
+      for (let i = 0; i < restt.length; i++) {
+         if (answers[i] === "A" || answers[i] === "B") {
+            if (answers[i] === "A") {
+               filterAnswers.push(true);
+            } else if (answers[i] === "B") {
+               filterAnswers.push(false);
+            }
+            filterGames.push(restt[i]);
+         }
+      }
 
-      res.render("aftersurvey", { userAnswers: answers, websiteAnswers: games });
+      // let u = req.user.username;
+      let u = "JoeBlow";
+      for (let i = 0; i < filterGames.length; i++) {
+         try {
+            await pool.query("CALL user_interests_i($1, $2, $3)", [u, filterGames[i], filterAnswers[i]]);
+         } catch (err) {
+            console.log(err.stack);
+            // res.render("survey");
+         }
+      }
    }
+   res.render("aftersurvey");
 });
 
 app.post("/users/register", async (req, res) => {
@@ -155,12 +197,18 @@ app.post("/users/register", async (req, res) => {
    }
 });
 
-// app.post("/users/aftersurvey", function (req, res) {
-//    var rand = Math.floor(random() * 100);
+app.get("aftersurvey", async function (req, res) {
+   try {
+      await pool.query("CALL user_interests_i($1)", [u]);
+   } catch (err) {
+      console.log(err.stack);
+   }
+   res.render("aftersurvey");
+});
 
-//    pool.query("SELECT games.title FROM games WHERE game_id = $1", [rand]);
-//    res.render("aftersurvey");
-// });
+app.post("aftersurvey", async function (req, res) {
+   res.render("aftersurvey");
+});
 
 function checkAuthenticated(req, res, next) {
    if (req.isAuthenticated()) {
