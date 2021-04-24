@@ -12,8 +12,7 @@
       <title>Choose Your Game</title>
    </head>
    <body>
-      <% var games = userSuggestions; 
-      var user = username; %>
+      <% var games = userSuggestions; var user = username; %>
       <nav class="navbar">
          <a><img src="/logo.png" class="logo" width="50" height="50" /></a>
       </nav>
@@ -175,13 +174,6 @@
                <div>
                   <input type="radio" name="userGameTitles" id="question-11-answers-A" value="<%=games%>" checked hidden />
                   <label for="question-11-answers-A"></label>
-               </div>
-            </li>
-            <li hidden>
-               <h3></h3>
-               <div>
-                  <input type="radio" name="usernameInput" id="question-12-answers-A" value="<%=user%>" checked hidden />
-                  <label for="question-12-answers-A"></label>
                </div>
             </li>
          </ol>

@@ -7,8 +7,21 @@
       <title>Finish Survey</title>
    </head>
    <body>
-      <h1>Suggested Games for you</h1>
-
       
+      <nav class="navbar">
+         <a><img src="/logo.png" class="logo" width="50" height="50" /></a>
+      </nav>
+      <h1>Suggested Games for you</h1>
+      <ol>
+         <% for(var i=0; i<userRecommendations.length; i++) { %>
+             <li >
+                <h3><%= userRecommendations[i] %></h3>
+                 
+             </li>
+         <% } %>
+         <form action="/users/aftersurvey" method="POST">
+            <button type="submit" name="mygames" value="<%=userRecommendations%>" >DashBoard</button>
+         </form>
+     </ol>
    </body>
 </html>

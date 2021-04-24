@@ -43,6 +43,7 @@ function initialize(passport) {
             return done(err);
          }
          console.log(`ID is ${results.rows[0].user_id}`);
+
          return done(null, results.rows[0]);
       });
    });

@@ -4,6 +4,8 @@ const bcrypt = require("bcrypt");
 const passport = require("passport");
 const flash = require("express-flash");
 const session = require("express-session");
+var cookieParser = require("cookie-parser");
+
 // const bodyParser = require("body-parser");
 require("dotenv").config();
 const app = express();
@@ -13,6 +15,7 @@ const { render } = require("ejs");
 
 initializePassport(passport);
 // app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.set("view engine", "ejs");
 app.use(
@@ -38,6 +41,59 @@ app.get("/users/register", checkAuthenticated, (req, res) => {
    res.render("register.ejs");
 });
 
+app.post("/users/register", async (req, res) => {
+   let username = req.body.username;
+   let password = req.body.password;
+   let password2 = req.body.password2;
+   let errors = [];
+
+   console.log({ username, password, password2 });
+
+   if (!username || !password || !password2) {
+      errors.push({ message: "Please enter all fields" });
+   }
+
+   if (password.length < 6) {
+      errors.push({ message: "Password must be a least 6 characters long" });
+   }
+
+   if (password !== password2) {
+      errors.push({ message: "Passwords do not match" });
+   }
+
+   if (errors.length > 0) {
+      res.render("register", { errors, username, password, password2 });
+   } else {
+      hashedPassword = await bcrypt.hash(password, 10);
+      console.log(hashedPassword);
+
+      pool.query(`SELECT * FROM users WHERE username = $1`, [username], (err, results) => {
+         if (err) {
+            console.log(err);
+         }
+         console.log(results.rows);
+
+         if (results.rows.length > 0) {
+            return res.render("register", {
+               message: "Name already registered",
+            });
+         } else {
+            pool.query("CALL users_i($1, $2, $3)", [username, "email@email.com", hashedPassword], (err, results) => {
+               if (err) {
+                  throw err;
+               }
+               console.log(results.rows);
+               req.flash("success_msg", "You are now registered. Please log in");
+               res.redirect("/users/login");
+            });
+         }
+      });
+      req.session.uname = username;
+
+      console.log("signup session name" + req.session.uname);
+   }
+});
+
 app.get("/users/login", checkAuthenticated, (req, res) => {
    console.log(req.session.flash.error);
    res.render("login.ejs");
@@ -50,13 +106,36 @@ app.post(
 
 app.get("/users/dashboard", checkNotAuthenticated, (req, res) => {
    console.log(req.isAuthenticated());
-   res.render("dashboard", { user: req.user.username });
+   var suggestedGames = req.session.games;
+   var name = req.user.username;
+   var userName = req.session.uname;
+   if (userName) {
+      console.log("session name exsists: " + userName);
+   } else {
+      req.session.uname = name;
+      let sessionName = req.session.uname;
+      userName = sessionName;
+      console.log("session name new: " + sessionName);
+   }
+
+   if (suggestedGames) {
+      console.log("suggested games exsists: " + suggestedGames);
+   } else {
+      console.log("NO gamesssss");
+   }
+
+   res.render("dashboard", { user: userName, userRecommendations: suggestedGames });
+});
+
+app.post("/users/dashboard", (req, res) => {
+   res.render("dashboard");
 });
 
 app.get("/users/survey", async function (req, res) {
    var gameIds = [];
    var userRandomGames = [];
-   var user = req.body.getUser;
+   var user = req.session.uname;
+   console.log("survey username: " + user);
 
    try {
       const res = await pool.query("SELECT * FROM games");
@@ -107,7 +186,6 @@ app.post("/users/survey", async function (req, res) {
    const q9a = req.body.q9answers;
    const q10a = req.body.q10answers;
    const gameTitles = req.body.userGameTitles;
-   const user = req.body.usernameInput;
    console.log(gameTitles);
    let errors = [];
 
@@ -133,81 +211,60 @@ app.post("/users/survey", async function (req, res) {
          }
       }
 
-      // let u = req.user.username;
-      let u = "JoeBlow";
+      let u = req.session.uname;
+      // let u = jakenaes;
+
       for (let i = 0; i < filterGames.length; i++) {
          try {
             await pool.query("CALL user_interests_i($1, $2, $3)", [u, filterGames[i], filterAnswers[i]]);
          } catch (err) {
             console.log(err.stack);
-            // res.render("survey");
          }
       }
-   }
-   res.render("aftersurvey");
-});
 
-app.post("/users/register", async (req, res) => {
-   let username = req.body.username;
-   let password = req.body.password;
-   let password2 = req.body.password2;
-   let errors = [];
+      try {
+         await pool.query("CALL generate_recommendation($1)", [u], (err, result) => {
+            if (err) {
+               throw err;
+            } else {
+               console.log("has recommendations");
+            }
+         });
+      } catch (err) {
+         console.log(err.stack);
+      }
 
-   console.log({ username, password, password2 });
+      try {
+         var userRecommendations = [];
+         const ress = await pool.query(
+            "SELECT games.title FROM games JOIN recommendations ON games.game_id = recommendations.gid WHERE recommendations.username = $1;",
+            [req.session.uname]
+         );
+         const d = ress.rows;
+         d.forEach((row) => {
+            console.log(row.title);
+            userRecommendations.push(row.title);
+         });
+      } catch (err) {
+         console.log(err.stack);
+      }
 
-   if (!username || !password || !password2) {
-      errors.push({ message: "Please enter all fields" });
-   }
-
-   if (password.length < 6) {
-      errors.push({ message: "Password must be a least 6 characters long" });
-   }
-
-   if (password !== password2) {
-      errors.push({ message: "Passwords do not match" });
-   }
-
-   if (errors.length > 0) {
-      res.render("register", { errors, username, password, password2 });
-   } else {
-      hashedPassword = await bcrypt.hash(password, 10);
-      console.log(hashedPassword);
-
-      pool.query(`SELECT * FROM users WHERE username = $1`, [username], (err, results) => {
-         if (err) {
-            console.log(err);
-         }
-         console.log(results.rows);
-
-         if (results.rows.length > 0) {
-            return res.render("register", {
-               message: "Name already registered",
-            });
-         } else {
-            pool.query("CALL users_i($1, $2, $3)", [username, "email@email.com", hashedPassword], (err, results) => {
-               if (err) {
-                  throw err;
-               }
-               console.log(results.rows);
-               req.flash("success_msg", "You are now registered. Please log in");
-               res.redirect("/users/login");
-            });
-         }
-      });
+      res.render("aftersurvey", { userRecommendations: userRecommendations });
    }
 });
 
-app.get("aftersurvey", async function (req, res) {
-   try {
-      await pool.query("CALL user_interests_i($1)", [u]);
-   } catch (err) {
-      console.log(err.stack);
-   }
+app.get("/users/aftersurvey", async function (req, res) {
+   console.log("AFTER survey get");
+
    res.render("aftersurvey");
 });
 
-app.post("aftersurvey", async function (req, res) {
-   res.render("aftersurvey");
+app.post("/users/aftersurvey", async function (req, res) {
+   var myGames = req.body.mygames;
+   var u = req.user.username;
+
+   console.log("AFTER survey POST");
+   res.render("dashboard", { userRecommendations: myGames, uname: u });
 });
 
 function checkAuthenticated(req, res, next) {
