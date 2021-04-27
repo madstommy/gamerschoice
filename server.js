@@ -9,6 +9,7 @@ var cookieParser = require("cookie-parser");
 // const bodyParser = require("body-parser");
 require("dotenv").config();
 const app = express();
+app.listen(process.env.PORT || 3000);
 
 const initializePassport = require("./passportConfig");
 const { render } = require("ejs");
@@ -212,7 +213,6 @@ app.post("/users/survey", async function (req, res) {
       }
 
       let u = req.session.uname;
-      // let u = jakenaes;
 
       for (let i = 0; i < filterGames.length; i++) {
          try {
@@ -280,7 +280,3 @@ function checkNotAuthenticated(req, res, next) {
    }
    res.redirect("/users/login");
 }
-
-app.listen(3000, function () {
-   console.log("server started on 3000");
-});
